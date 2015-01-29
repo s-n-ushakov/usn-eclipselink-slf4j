@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+
+<project
+    basedir="."
+    default="build-all"
+    name="usn-eclipselink-slf4j"
+    >
+  <description>SLF4J logger for EclipseLink</description>
+
+  <tstamp />
+  <property name="build.product.name" value="usn-eclipselink-slf4j" />
+  <property name="build.product.version" value="${DSTAMP}" />
+  <property name="build.product.deliverable.base"
+      value="${build.product.name}-${build.product.version}" />
+  <property name="build.product.deliverable.full"
+      value="${build.product.name}-${build.product.version}-full" />
+  <property name="build.debuglevel" value="source,lines,vars" />
+  <property name="build.source" value="1.5" />
+  <property name="build.target" value="1.5" />
+  <property name="build.bootclasspath.base"
+      value="/Volumes/C/Program Files/Java/jdk1.5.0_22/jre/lib/"
+      />
+  <path id="build.bootclasspath.all">
+    <pathelement location="${build.bootclasspath.base}/rt.jar" />
+    </path>
+
+  <!-- directories -->
+  <property name="build.dir.source.all" value="src" />
+  <property name="build.dir.source.java" value="src/main/java" />
+  <property name="build.dir.build" value="ant-build" />
+
+  <!-- user libraries -->
+  <!-- library: EclipseLink 2.5.2 -->
+  <path id="build.lib.eclipselink.jars">
+    <pathelement
+        location="${user.home}/.m2/repository/org/eclipse/persistence/eclipselink/2.5.2/eclipselink-2.5.2.jar"
+        />
+    </path>
+  <property name="build.lib.eclipselink.docs.href"
+      value="http://www.eclipse.org/eclipselink/api/2.5/" />
+  <zipfileset id="build.lib.eclipselink.docs.packagelist"
+      src="${user.home}/.m2/repository/org/eclipse/persistence/eclipselink/2.5.2/eclipselink-2.5.2-javadoc.jar"
+      >
+    <patternset>
+      <include name="package-list"/>
+      </patternset>
+    </zipfileset>
+  <!-- library: SLF4J 1.7.10 -->
+  <path id="build.lib.slf4j.jars">
+    <pathelement
+        location="${user.home}/.m2/repository/org/slf4j/slf4j-api/1.7.10/slf4j-api-1.7.10.jar"
+        />
+    <pathelement
+        location="${user.home}/.m2/repository/org/slf4j/slf4j-ext/1.7.10/slf4j-ext-1.7.10.jar"
+        />
+    </path>
+  <property name="build.lib.slf4j.docs.href"
+      value="http://www.slf4j.org/apidocs/" />
+  <zipfileset id="build.lib.slf4j.docs.packagelist"
+      src="${user.home}/.m2/repository/org/slf4j/slf4j-api/1.7.10/slf4j-api-1.7.10-javadoc.jar"
+      >
+    <patternset>
+      <include name="package-list"/>
+      </patternset>
+    </zipfileset>
+
+  <!-- extra locations for javadoc task -->
+  <!-- NOTE making Java API version for javadoc task consistent ("5") with build
+            target version
+            -->
+  <property name="build.jre.docs.href"
+      value="http://docs.oracle.com/javase/1.5.0/docs/api/" />
+  <zipfileset id="build.jre.docs.packagelist"
+      src="${user.home}/Downloads/Java/Oracle/Java SE 1.5.0_22/jdk-1_5_0-doc.zip"
+      >
+    <patternset>
+      <include name="docs/api/package-list"/>
+      </patternset>
+    </zipfileset>
+
+  <!-- overall classpath for the build -->
+  <path id="build.classpath">
+    <pathelement location="${build.dir.build}/classes" />
+    <path refid="build.lib.eclipselink.jars" />
+    <path refid="build.lib.slf4j.jars" />
+    </path>
+
+  <!-- targets - ancillary -->
+  <target name="clean">
+    <delete dir="${build.dir.build}" />
+    </target>
+  <target name="init">
+    <mkdir dir="${build.dir.build}" />
+    <mkdir dir="${build.dir.build}/apidocs" />
+    <mkdir dir="${build.dir.build}/classes" />
+    <mkdir dir="${build.dir.build}/javadoc-packagelists" />
+    </target>
+  <target name="build-classes" depends="init">
+    <echo message="build-classes: ${ant.project.name}: ${ant.file}" />
+    <!-- NOTE adding 'bootclasspathref' attribute for downshifting the target
+              Java version for better compatibility
+              -->
+    <javac
+        bootclasspathref="build.bootclasspath.all"
+        classpathref="build.classpath"
+        debug="yes"
+        debuglevel="${build.debuglevel}"
+        destdir="${build.dir.build}/classes"
+        excludes="**/package-info.java"
+        includeantruntime="no"
+        source="${build.source}"
+        srcdir="${build.dir.source.java}"
+        target="${build.target}"
+        />
+    </target>
+  <target name="build-packagelists" depends="init">
+    <copy
+        todir="${build.dir.build}/javadoc-packagelists/lib.eclipselink"
+        preservelastmodified="yes">
+      <zipfileset refid="build.lib.eclipselink.docs.packagelist" />
+      <mapper type="flatten" />
+      </copy>
+    <copy
+        todir="${build.dir.build}/javadoc-packagelists/lib.slf4j"
+        preservelastmodified="yes">
+      <zipfileset refid="build.lib.slf4j.docs.packagelist" />
+      <mapper type="flatten" />
+      </copy>
+    <copy
+        todir="${build.dir.build}/javadoc-packagelists/jre"
+        preservelastmodified="yes">
+      <zipfileset refid="build.jre.docs.packagelist" />
+      <mapper type="flatten" />
+      </copy>
+    </target>
+  <target name="build-doc" depends="init,build-packagelists">
+    <echo message="build-doc: ${ant.project.name}: ${ant.file}" />
+    <javadoc
+        access="protected"
+        author="yes"
+        bootclasspathref="build.bootclasspath.all"
+        charset="UTF-8"
+        classpathref="build.classpath"
+        destdir="${build.dir.build}/apidocs"
+        docencoding="UTF-8"
+        encoding="UTF-8"
+        nodeprecated="no"
+        nodeprecatedlist="no"
+        noindex="no"
+        nonavbar="no"
+        notree="no"
+        source="${build.source}"
+        sourcepath="${build.dir.source.java}"
+        splitindex="no"
+        use="yes"
+        verbose="no"
+        version="yes"
+        >
+      <package name="usn.eclipse.persistence.logging" />
+      <link href="${build.jre.docs.href}"
+          offline="yes"
+          packagelistloc="${build.dir.build}/javadoc-packagelists/jre"
+          />
+      <link href="${build.lib.eclipselink.docs.href}"
+          offline="yes"
+          packagelistloc="${build.dir.build}/javadoc-packagelists/lib.eclipselink"
+          />
+      <link href="${build.lib.slf4j.docs.href}"
+          offline="yes"
+          packagelistloc="${build.dir.build}/javadoc-packagelists/lib.slf4j"
+          />
+      </javadoc>
+    </target>
+
+  <!-- targets - deliverables -->
+  <target name="build-jar" depends="build-classes">
+    <echo message="build-jar: ${ant.project.name}: ${ant.file}" />
+    <jar
+        destfile="${build.dir.build}/${build.product.deliverable.base}.jar"
+        >
+      <fileset dir="${build.dir.build}/classes" />
+      <metainf file="LICENSE.EDL.html" />
+      <metainf file="LICENSE.EPL.html" />
+      <!-- NOTE be nice with Maven folks and add 'pom.xml' as they like :)
+                -->
+      <zipfileset file="pom.xml"
+          prefix="META-INF/maven/com.github.s-n-ushakov/i18n-nobundle" />
+      <manifest>
+        <attribute name="Implementation-Title" value="${build.product.name}" />
+        <attribute name="Implementation-Version"
+            value="${build.product.version}" /> 
+        </manifest>
+      </jar>
+    </target>
+  <target name="build-distr" depends="build-jar,build-doc">
+    <echo message="build-distr: ${ant.project.name}: ${ant.file}" />
+    <zip
+        destfile="${build.dir.build}/${build.product.deliverable.full}.zip"
+        >
+      <zipfileset
+          file="${build.dir.build}/${build.product.deliverable.base}.jar"
+          prefix="${build.product.deliverable.base}/lib" />
+      <zipfileset dir="${build.dir.build}/apidocs"
+          prefix="${build.product.deliverable.base}/doc" />
+      <zipfileset dir="${build.dir.source.all}"
+          prefix="${build.product.deliverable.base}/src/src" />
+      <zipfileset dir="." includes=""
+          prefix="${build.product.deliverable.base}/src">
+        <include name="build.xml"/>
+        <include name="pom.xml"/>
+        <include name="m2e-lifecycle-mapping-metadata.xml"/>
+        </zipfileset>
+      <zipfileset dir="." includes=""
+          prefix="${build.product.deliverable.base}">
+        <include name="CHANGELOG.txt"/>
+        <include name="LICENSE.EDL.html"/>
+        <include name="LICENSE.EPL.html"/>
+        <include name="README.md"/>
+        <include name=".gitignore"/>
+        </zipfileset>
+      </zip>
+    </target>
+  <target name="build-all" depends="build-jar,build-distr" />
+  </project>

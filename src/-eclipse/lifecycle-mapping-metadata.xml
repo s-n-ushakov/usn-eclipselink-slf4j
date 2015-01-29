@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- NOTE This file contains project specific settings for 'm2e' (M2Eclipse,
+          http://www.eclipse.org/m2e/) Eclipse plugin and is intended to be
+          copied to or merged with file
+          ${workspace_loc}/.metadata/.plugins/org.eclipse.m2e.core/lifecycle-mapping-metadata.xml
+          in order to to deal with 'Plugin execution not covered by lifecycle
+          configuration' error messages in Eclipse.
+
+          For background see
+          http://www.eclipse.org/m2e/documentation/m2e-execution-not-covered.html .
+
+          For general approach to dealing with specific cases in Eclipse see
+          http://stackoverflow.com/questions/6352208/how-to-solve-plugin-execution-not-covered-by-lifecycle-configuration-for-sprin#14809920 .
+          -->
+
+<lifecycleMappingMetadata>
+  <pluginExecutions>
+    <pluginExecution>
+      <!-- 2015-01-09 - 'com.github.s-n-ushakov:i18n-nobundle' project
+           -->
+      <pluginExecutionFilter>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <versionRange>[1.2,)</versionRange>
+        <goals>
+          <goal>execute</goal>
+        </goals>
+      </pluginExecutionFilter>
+      <action>
+        <execute />
+      </action>
+    </pluginExecution>
+  </pluginExecutions>
+</lifecycleMappingMetadata>

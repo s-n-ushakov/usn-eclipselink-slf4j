@@ -1,0 +1,8 @@
+/-notes/
+/.settings/
+/ant-build/
+/target/
+/.DS_Store
+/.README.md.html
+/.classpath
+/.project

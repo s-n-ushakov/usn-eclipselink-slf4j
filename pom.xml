@@ -1,0 +1,151 @@
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    >
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.github.s-n-ushakov</groupId>
+  <artifactId>usn-eclipselink-slf4j</artifactId>
+  <packaging>jar</packaging>
+  <name>SLF4J logger for EclipseLink</name>
+  <version>20150129</version>
+  <description>Implements logging for EclipseLink via SLF4J</description>
+  <url>https://github.com/s-n-ushakov/usn-eclipselink-slf4j</url>
+  <developers>
+    <developer>
+      <name>Sergey Ushakov</name>
+      <email>s-n-ushakov@yandex.ru</email>
+      <url>https://github.com/s-n-ushakov/ ,
+          http://s-n-ushakov.blogspot.com/</url>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>Eclipse Public License - v 1.0</name>
+      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+      <distribution>repo</distribution>
+    </license>
+    <license>
+      <name>Eclipse Distribution License - v 1.0</name>
+      <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:git://github.com/s-n-ushakov/usn-eclipselink-slf4j.git</connection>
+    <developerConnection>scm:git:git://github.com/s-n-ushakov/usn-eclipselink-slf4j.git</developerConnection>
+    <url>https://github.com/s-n-ushakov/usn-eclipselink-slf4j</url>
+  </scm>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.2</version>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <includePom>true</includePom>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.1</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <links>
+            <link>http://www.eclipse.org/eclipselink/api/2.5/</link>
+            <link>http://www.slf4j.org/apidocs/</link>
+          </links>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <version>1.2</version>
+        <executions>
+          <execution>
+            <id>check-version-against-current-date</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>2.3.9</version>
+          </dependency>
+          <dependency>
+            <!-- required by 'groovy' starting with '2.3.0-rc-1' -->
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-ant</artifactId>
+            <version>2.3.9</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <scripts>
+            <script>
+                String sCurrentDate = (new Date()).format('yyyyMMdd')
+                if (sCurrentDate != "${project.version}") {
+                  log.warn("Project version ${project.version} " +
+                           "does not match current date as ${sCurrentDate}")
+                }
+            </script>
+          </scripts>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <properties>
+    <maven.test.skip>true</maven.test.skip>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.eclipse.persistence</groupId>
+      <artifactId>eclipselink</artifactId>
+      <version>2.5.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.10</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-ext</artifactId>
+      <version>1.7.10</version>
+    </dependency>
+  </dependencies>
+
+</project>
